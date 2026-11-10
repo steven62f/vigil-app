@@ -19,7 +19,7 @@ The current source release is **1.7.0**.
 - Read live usage quotas, and optionally show one tool’s quota on the notch.
 - Give each tool its own pixel mascot, state color, and sound.
 - Get a short status on your phone through a Telegram bot you create yourself. The bot token stays in Windows Credential Manager. The message is the same short label the notch already shows: no secrets, source, file contents, or tool output.
-- Start with Windows, repair hooks on launch, and hear about a newer build published on the releases repository.
+- Start with Windows, repair hooks on launch, and hear about a newer build published on this repository’s releases.
 
 Vigil is a Windows application (NSIS installer, Win32 named pipes, system tray). It does not run as a Linux or macOS app.
 
@@ -37,9 +37,9 @@ Hooks are installed only after you confirm the diff Vigil is about to write into
 
 ## Download
 
-Installers are published separately from this source repository:
+Installers are published as releases of this repository:
 
-**[github.com/steven62f/vigil-releases/releases/latest](https://github.com/steven62f/vigil-releases/releases/latest)**
+**[github.com/steven62f/vigil-app/releases/latest](https://github.com/steven62f/vigil-app/releases/latest)**
 
 The source tree in this repository is version 1.7.0. The installer is per-user (no administrator account required) and is available in English and French.
 
@@ -82,7 +82,37 @@ npm run tauri build
 
 Frontend tests (`npm test`, Vitest) run on any platform. The Rust workspace and the installer build on Windows, because the hooks and the app call Win32 APIs.
 
-GitHub Actions (`.github/workflows/build.yml`) runs on `windows-latest` for every push: frontend build, Vitest, a release build of the hooks, `cargo build --workspace`, and `cargo test --workspace`. It does not produce the NSIS installer.
+GitHub Actions (`.github/workflows/build.yml`) runs on `windows-latest` for every push: frontend build, Vitest, a release build of the hooks, `cargo build --workspace`, and `cargo test --workspace`. The NSIS installer is published by `.github/workflows/release.yml`, not by that test workflow.
+
+## Publish a release
+
+The in-app updater calls `https://api.github.com/repos/steven62f/vigil-app/releases/latest` and opens the release page. It does not download a Tauri `latest.json`, and the build does not sign updater artifacts. No updater signing key and no extra Actions secret are required: the release workflow uses the built-in `GITHUB_TOKEN` with `contents: write`.
+
+A version tag other than `v1.7.0` starts `.github/workflows/release.yml` on `windows-latest`. The tag must be `v` followed by the version in `package.json`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json` (the three files `set-version.ps1` writes). The workflow builds the five hook binaries, packages `vigil_<version>_x64-setup.exe`, and uploads it to a release of this repository.
+
+```bash
+powershell -File set-version.ps1 -Version X.Y.Z
+git add package.json src-tauri/Cargo.toml src-tauri/tauri.conf.json
+git commit -m "Bump version to X.Y.Z"
+# merge that commit to main, then:
+git tag vX.Y.Z
+git push origin vX.Y.Z
+```
+
+You can also run the Release workflow by hand (Actions → Release → Run workflow) and pass the same tag. The selected commit must already contain that version.
+
+`v1.7.0` is not built by CI. The installer already published on `steven62f/vigil-releases` is attached once, by hand, so a rebuild does not replace it. The workflow skips that tag on purpose.
+
+```bash
+gh release download v1.7.0 --repo steven62f/vigil-releases --pattern "vigil_1.7.0_x64-setup.exe"
+gh release create v1.7.0 vigil_1.7.0_x64-setup.exe \
+  --repo steven62f/vigil-app \
+  --target de6a5cc4b69ed965833ecc24d2a323567091cdc1 \
+  --title "v1.7.0" \
+  --notes "NSIS installer 1.7.0, copied from steven62f/vigil-releases."
+```
+
+That tag points at the public 1.7.0 source snapshot. Pushing it does not build a new installer.
 
 ## Project layout
 
@@ -96,7 +126,7 @@ vigil-grok/           Grok Build hook
 vigil-antigravity/    Antigravity CLI hook
 vigil-kimi/           Kimi CLI hook
 docs/                 French notes (architecture, hook pipeline, notch layout, Claude hooks)
-.github/workflows/    Windows CI
+.github/workflows/    Windows CI and installer publishing
 ```
 
 `docs/architecture-overview.md` and `docs/hook-pipeline.md` describe the pipe and the original three hooks. Antigravity CLI and Kimi CLI follow the same shape; the tables above and `src/windows/panel/pages/ToolCard.tsx` are the current capability list.
@@ -108,7 +138,7 @@ Monitoring itself stays on the machine (hooks, named pipe, local transcripts). T
 - **Usage tracking** reads the credential file the CLI already stored and queries that provider: `api.anthropic.com` for Claude Code, `chatgpt.com` for Codex, `cli-chat-proxy.grok.com` for Grok. Antigravity usage is read from the local `agy` process, not from Google.
 - **Usage-window priming** (Claude Code only, off unless you enable it) sends a minimal message to `api.anthropic.com` when the 5-hour window is closed.
 - **Telegram** sends the short notch label to `api.telegram.org` after you pair a bot you created.
-- **Update check** reads the public GitHub API for `steven62f/vigil-releases`. It does not send a token.
+- **Update check** reads the public GitHub API for `steven62f/vigil-app` (`/repos/steven62f/vigil-app/releases/latest`). It does not send a token. When a newer version exists, Vigil opens that release page.
 
 ## Contributing
 

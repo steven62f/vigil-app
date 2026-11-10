@@ -48,5 +48,5 @@ jobs:
 
       - name: Test Rust (workspace)
         run: cargo test --workspace
-        # NOTE: Le build NSIS (npm run tauri build) n'est PAS exécuté en CI.
-        # La génération de l'installateur signé est réservée au release local (npm run build:release).
+        # L'installeur NSIS n'est pas produit ici.
+        # release.yml le publie comme release de steven62f/vigil-app.
