@@ -8,7 +8,7 @@ Vigil reste en haut de l’écran sous la forme d’un notch, toujours au premie
 
 ![Mascotte Vigil](src-tauri/icons/icon.png)
 
-La version des sources est la **1.7.0**.
+La version des sources est la **1.7.1**.
 
 ## Ce que Vigil permet
 
@@ -41,7 +41,7 @@ Les installeurs sont publiés comme releases de ce dépôt :
 
 **[github.com/steven62f/vigil-app/releases/latest](https://github.com/steven62f/vigil-app/releases/latest)**
 
-Les sources de ce dépôt sont en version 1.7.0. L’installeur s’installe pour l’utilisateur courant (sans compte administrateur) et propose le français et l’anglais.
+Les sources de ce dépôt sont en version 1.7.1. L’installeur s’installe pour l’utilisateur courant (sans compte administrateur) et propose le français et l’anglais.
 
 Après l’installation, Vigil reste dans la zone de notification. Ouvrir la page Installation du panneau, activer chaque CLI détecté, puis confirmer le diff de configuration. Le CLI lance ensuite le hook `vigil-*.exe` correspondant.
 

@@ -8,7 +8,7 @@ Vigil sits at the top of the screen as a small always-on-top notch, and opens in
 
 ![Vigil mascot](src-tauri/icons/icon.png)
 
-The current source release is **1.7.0**.
+The current source release is **1.7.1**.
 
 ## What you can do
 
@@ -41,7 +41,7 @@ Installers are published as releases of this repository:
 
 **[github.com/steven62f/vigil-app/releases/latest](https://github.com/steven62f/vigil-app/releases/latest)**
 
-The source tree in this repository is version 1.7.0. The installer is per-user (no administrator account required) and is available in English and French.
+The source tree in this repository is version 1.7.1. The installer is per-user (no administrator account required) and is available in English and French.
 
 After installation, Vigil lives in the system tray. Open the panel’s Installation page, turn on each CLI that Vigil detected, and confirm the config diff. From then on, that CLI launches the matching `vigil-*.exe` hook.
 
