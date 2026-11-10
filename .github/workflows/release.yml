@@ -1,0 +1,148 @@
+name: Release
+
+# Publie l'installeur NSIS comme release de CE dépôt (steven62f/vigil-app).
+#
+# Le suivi de mise à jour intégré lit l'API GitHub
+# https://api.github.com/repos/steven62f/vigil-app/releases/latest
+# et ouvre la page de release. Il ne consomme pas de latest.json.
+# Tauri ne signe donc pas d'artefacts d'updater : aucun secret
+# TAURI_SIGNING_PRIVATE_KEY n'est lu. Le jeton utilisé est le
+# GITHUB_TOKEN du dépôt (permission contents: write), pas un PAT.
+#
+# v1.7.0 est exclu : l'installeur déjà construit est déposé à la main
+# depuis steven62f/vigil-releases, et ce workflow ne doit pas le remplacer.
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag de release à créer ou compléter (ex. v1.8.0). Doit valoir v + la version déjà écrite dans les sources du commit choisi."
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  keep-existing-v170:
+    name: Keep the existing v1.7.0 installer
+    if: >-
+      ${{
+        (github.event_name == 'push' && github.ref_name == 'v1.7.0')
+        || (github.event_name == 'workflow_dispatch' && inputs.tag == 'v1.7.0')
+      }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do not rebuild v1.7.0
+        run: |
+          echo "Le tag v1.7.0 est réservé à l'installeur déjà publié sur steven62f/vigil-releases."
+          echo "Le déposer avec : gh release create v1.7.0 vigil_1.7.0_x64-setup.exe --repo steven62f/vigil-app"
+          echo "Ce workflow ne le recompile pas et ne remplace pas l'asset."
+
+  release:
+    name: Build and publish the NSIS installer
+    if: >-
+      ${{
+        (github.event_name == 'workflow_dispatch' && inputs.tag != 'v1.7.0')
+        || (github.event_name == 'push' && github.ref_name != 'v1.7.0')
+      }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Check tag matches app version
+        id: tag
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            TAG=$INPUT_TAG
+          else
+            TAG=$REF_NAME
+          fi
+          TAG=$(printf '%s' "$TAG" | tr -d '[:space:]')
+          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Tag invalide : '$TAG' (attendu : vX.Y.Z)"
+            exit 1
+          fi
+          VERSION=${TAG#v}
+          export VERSION
+          node <<'NODE'
+          const fs = require("fs");
+          const expected = process.env.VERSION;
+          const pkg = JSON.parse(fs.readFileSync("package.json", "utf8")).version;
+          const tauri = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8")).version;
+          const cargo = fs.readFileSync("src-tauri/Cargo.toml", "utf8").match(/^version = "([^"]+)"/m)[1];
+          const bad = [];
+          if (pkg !== expected) bad.push(`package.json=${pkg}`);
+          if (tauri !== expected) bad.push(`tauri.conf.json=${tauri}`);
+          if (cargo !== expected) bad.push(`src-tauri/Cargo.toml=${cargo}`);
+          if (bad.length) {
+            console.error(`Le tag v${expected} ne correspond pas aux sources : ${bad.join(", ")}`);
+            process.exit(1);
+          }
+          console.log(`Version confirmée : ${expected}`);
+          NODE
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build frontend (TypeScript + Vite)
+        run: npm run build
+
+      - name: Test frontend (Vitest)
+        run: npm run test
+
+      - name: Build vigil-claude/codex/grok/antigravity/kimi (release)
+        run: cargo build --release -p vigil-claude -p vigil-codex -p vigil-grok -p vigil-antigravity -p vigil-kimi
+
+      - name: Test Rust (workspace)
+        run: cargo test --workspace
+
+      - name: Publish NSIS installer to this repository
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ steps.tag.outputs.tag }}
+          releaseName: ${{ steps.tag.outputs.tag }}
+          releaseBody: |
+            Installeur NSIS par utilisateur (français et anglais) : `vigil_${{ steps.tag.outputs.version }}_x64-setup.exe`.
+
+            La recherche de mise à jour lit l'API GitHub de ce dépôt et ouvre cette page. Elle ne télécharge pas de `latest.json`.
+          releaseDraft: false
+          prerelease: false
+          # Pas d'updater Tauri signé dans cette application : ne pas inventer de latest.json ni de .sig.
+          uploadUpdaterJson: false
+          uploadUpdaterSignatures: false

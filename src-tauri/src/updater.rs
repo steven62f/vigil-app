@@ -1,5 +1,7 @@
+/// Dernière release de ce dépôt. L'installeur NSIS est un asset de la release.
+/// Vigil ouvre la page de release : il ne consomme pas de `latest.json` signé.
 const GITHUB_API_URL: &str =
-    "https://api.github.com/repos/steven62f/vigil-releases/releases/latest";
+    "https://api.github.com/repos/steven62f/vigil-app/releases/latest";
 const USER_AGENT: &str = concat!("vigil/", env!("CARGO_PKG_VERSION"));
 
 #[derive(serde::Deserialize)]
@@ -79,5 +81,14 @@ mod tests {
     fn tag_v_prefixe_parse_correctement() {
         let remote = "v1.0.3".trim_start_matches('v');
         assert!(compare_versions("1.0.2", remote));
+    }
+
+    #[test]
+    fn endpoint_est_le_depot_vigil_app() {
+        assert_eq!(
+            GITHUB_API_URL,
+            "https://api.github.com/repos/steven62f/vigil-app/releases/latest"
+        );
+        assert!(!GITHUB_API_URL.contains("vigil-releases"));
     }
 }
