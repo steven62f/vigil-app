@@ -58,7 +58,7 @@ fn compare_versions(current: &str, remote: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::compare_versions;
+    use super::{compare_versions, GITHUB_API_URL};
 
     #[test]
     fn nouvelle_version_detectee() {
