@@ -1,0 +1,11 @@
+node_modules/
+dist/
+target/
+src-tauri/gen/
+.env
+
+# Local working files, kept out of the public tree
+_bmad/
+_bmad-output/
+.claude/
+.playwright-mcp/

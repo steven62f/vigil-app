@@ -1,0 +1,16 @@
+[package]
+name = "vigil-hook-core"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "vigil_hook_core"
+path = "src/lib.rs"
+
+[dependencies]
+serde_json = "1"
+sha2 = "0.10"
+windows-sys = { version = "0.52", features = [
+    "Win32_System_Diagnostics_ToolHelp",
+    "Win32_Foundation",
+] }

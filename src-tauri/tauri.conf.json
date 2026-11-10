@@ -1,0 +1,75 @@
+{
+  "productName": "vigil",
+  "version": "1.7.0",
+  "identifier": "com.vigil.app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "notch",
+        "url": "notch.html",
+        "title": "Vigil Notch",
+        "alwaysOnTop": true,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "visible": true,
+        "width": 300,
+        "height": 48,
+        "resizable": false,
+        "skipTaskbar": true
+      },
+      {
+        "label": "panel",
+        "url": "panel.html",
+        "title": "Vigil",
+        "alwaysOnTop": false,
+        "decorations": true,
+        "visible": false,
+        "width": 860,
+        "height": 660,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "publisher": "Steven Hanquez",
+    "copyright": "Copyright © 2026 Steven Hanquez",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": {
+      "../target/release/vigil-claude.exe": "vigil-claude.exe",
+      "../target/release/vigil-codex.exe": "vigil-codex.exe",
+      "../target/release/vigil-grok.exe": "vigil-grok.exe",
+      "../target/release/vigil-antigravity.exe": "vigil-antigravity.exe",
+      "../target/release/vigil-kimi.exe": "vigil-kimi.exe",
+      "windows/cleanup-hooks.ps1": "cleanup-hooks.ps1"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "compression": "lzma",
+        "languages": ["French", "English"],
+        "headerImage": "windows/installer-header.bmp",
+        "sidebarImage": "windows/installer-sidebar.bmp",
+        "installerIcon": "icons/icon.ico",
+        "installerHooks": "windows/installer-hooks.nsh"
+      }
+    }
+  }
+}

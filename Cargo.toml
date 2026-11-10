@@ -1,0 +1,3 @@
+[workspace]
+members = ["src-tauri", "vigil-hook-core", "vigil-claude", "vigil-codex", "vigil-grok", "vigil-antigravity", "vigil-kimi"]
+resolver = "2"

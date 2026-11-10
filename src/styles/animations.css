@@ -1,0 +1,63 @@
+/* walk — état working : alternance jambes */
+@keyframes walk {
+  0%   { transform: translateY(0px); }
+  25%  { transform: translateY(-1px); }
+  50%  { transform: translateY(0px); }
+  75%  { transform: translateY(1px); }
+  100% { transform: translateY(0px); }
+}
+
+/* sway — état waiting : balancement horizontal */
+@keyframes sway {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(-3deg); }
+  50%  { transform: rotate(0deg); }
+  75%  { transform: rotate(3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* vigil-bounce — état ended : rebond victoire */
+@keyframes vigil-bounce {
+  0%   { transform: translateY(0px); }
+  30%  { transform: translateY(-4px); }
+  60%  { transform: translateY(0px); }
+  80%  { transform: translateY(-2px); }
+  100% { transform: translateY(0px); }
+}
+
+/* shake — état error : secousse horizontale */
+@keyframes shake {
+  0%   { transform: translateX(0px); }
+  20%  { transform: translateX(-2px); }
+  40%  { transform: translateX(2px); }
+  60%  { transform: translateX(-2px); }
+  80%  { transform: translateX(2px); }
+  100% { transform: translateX(0px); }
+}
+
+/* float — état idle : zZZ flottants montée + fondu */
+@keyframes float {
+  0%   { transform: translateY(0px); opacity: 0.8; }
+  100% { transform: translateY(-8px); opacity: 0; }
+}
+
+/* vigil-pulse — état unknown : pulsation douce */
+@keyframes vigil-pulse {
+  0%   { opacity: 0.4; }
+  50%  { opacity: 0.7; }
+  100% { opacity: 0.4; }
+}
+
+/* detail-appear — ouverture Vue Détail : fondu + glissement 200ms ease-out */
+@keyframes detail-appear {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0px); }
+}
+
+/* Désactiver les animations en boucle pour les utilisateurs sensibles au mouvement */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,0 +1,12 @@
+[package]
+name = "vigil-grok"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "vigil-grok"
+path = "src/main.rs"
+
+[dependencies]
+vigil-hook-core = { path = "../vigil-hook-core" }
+serde_json = "1"

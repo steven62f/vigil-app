@@ -1,0 +1,7 @@
+/* Overrides spécifiques à la fenêtre notch — importé après globals.css */
+html,
+body,
+#root {
+  overflow: hidden;
+  background: transparent;
+}

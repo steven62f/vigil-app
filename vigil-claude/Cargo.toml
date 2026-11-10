@@ -1,0 +1,11 @@
+[package]
+name = "vigil-claude"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "vigil-claude"
+path = "src/main.rs"
+
+[dependencies]
+vigil-hook-core = { path = "../vigil-hook-core" }

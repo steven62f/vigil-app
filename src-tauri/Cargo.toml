@@ -1,0 +1,50 @@
+[package]
+name = "vigil"
+version = "1.7.0"
+edition = "2021"
+
+[lib]
+name = "vigil_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-store = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-notification = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+# Story 9.2 — fusion des hooks Kimi dans `~/.kimi-code/config.toml`. Parser PRÉSERVANT le format :
+# ce fichier appartient à l'utilisateur (providers, alias de modèles, commentaires) et une
+# réécriture depuis un modèle sérialisé les perdrait. DÉJÀ dans l'arbre en 0.25.11 (dépendance
+# transitive) → aucune compilation supplémentaire. Features par défaut (`parse` + `display`)
+# suffisent : on ne (dé)sérialise rien via serde, on édite le document.
+toml_edit = "0.25"
+sha2 = "0.10"
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+open = "5"
+# Stockage du secret de notification dans le gestionnaire d'identifiants de l'OS.
+# Version 3.x DÉLIBÉRÉE (pas la 4.x) : la 4 est une restructuration majeure (keyring-core +
+# crates de stores séparées) dont la doc décourage l'usage direct par une application qui
+# choisit son store. Ici on range UNE chaîne de ~46 caractères : la 3.6 stable suffit.
+# `default-features = false` + `windows-native` → n'amène que windows-sys/byteorder, aucune
+# dépendance Linux/macOS sur un produit Windows-only.
+keyring = { version = "3", default-features = false, features = ["windows-native"] }
+windows = { version = "0.58", features = [
+    "Win32_System_Pipes",
+    "Win32_System_Threading",
+    "Win32_System_Registry",
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_Security_Authorization",
+    "Win32_Storage_FileSystem",
+    "Win32_System_IO",
+    "Win32_Graphics_Dwm",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_Diagnostics_ToolHelp",
+] }

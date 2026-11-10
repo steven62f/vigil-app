@@ -1,0 +1,89 @@
+@import "tailwindcss";
+@import "./animations.css";
+
+/* ── Thème sombre (défaut) ── */
+:root {
+  /* ── Fonds ── */
+  --bg-overlay:        #0f1117;   /* fond principal overlay / body */
+  --bg-surface:        #1a1d27;   /* cartes, surfaces élevées */
+  --bg-surface-hover:  #22263a;   /* hover sur éléments interactifs */
+  --bg-notch:          #080a0c;   /* fond du NotchContainer (quasi-noir) */
+  --bg-subtle:         #ffffff08; /* boutons secondaires — ne pas supprimer */
+
+  /* ── Texte ── */
+  --text-primary:      #e8eaf0;
+  --text-secondary:    #8b90a8;
+  /* --text-muted : #5a6070 (~4.1:1 sur #0f1117) — texte désactivé/métadonnées,
+     exempté WCAG 2.1 §1.4.3 (disabled UI components) */
+  --text-muted:        #5a6070;
+
+  /* ── Bordures ── */
+  --border-subtle:     #2a2d3e;
+
+  /* ── États agent ── */
+  --state-working:          #4a9eff;
+  --state-waiting-approve:  #f5a623;
+  --state-waiting-specific: #f5a623;
+  --state-waiting-alert:    #ef4444;  /* V2 uniquement — FR13 hors scope V1 */
+  --state-ended:            #4ade80;
+  --state-idle:             #4a4f68;
+  --state-error:            #f87171;
+  --state-disconnected:     #4a4f68;
+  --state-unknown:          #4a4f68;  /* état transitoire scan démarrage */
+
+  /* ── Couleurs sémantiques UI ── */
+  --color-success:        #4ade80;
+  --color-success-bg:     #22c55e18;
+  --color-success-hover:  #22c55e30;
+  --color-danger:         #f87171;
+  --color-danger-bg:      #ef444418;
+  --color-danger-hover:   #ef444430;
+  --color-amber:          #f5a623;
+  --color-amber-bg:       #f5a62318;
+  --bg-warning:           rgba(245, 166, 35, 0.08);
+  --color-warn:           var(--state-waiting-approve);
+  --bg-input-subtle:      rgba(255, 255, 255, 0.04);
+  --border-separator:     rgba(255, 255, 255, 0.06);
+
+  /* ── Diff ── */
+  --diff-added-bg:     #1a3a1a;
+  --diff-removed-bg:   #3a1a1a;
+
+  /* ── Vue Liste ── */
+  --bg-row-hover:      #ffffff07;
+  --bg-badge-hover:    #ffffff18;
+  --border-row:        #ffffff05;
+
+  /* ── Tool badges ── */
+  --source-codex:     #10a37f;
+  --source-codex-bg:  rgba(16, 163, 127, 0.12);
+  --source-grok:      #6366f1;
+  --source-grok-bg:   rgba(99, 102, 241, 0.12);
+  --source-antigravity:    #4285f4;                    /* bleu « Gemini/Google » (Antigravity ← Gemini CLI), distinct de l'indigo Grok */
+  --source-antigravity-bg: rgba(66, 133, 244, 0.12);
+  --source-kimi:           #d946ef;                    /* magenta (Kimi ← Moonshot AI) : distinct du teal Codex, de l'indigo Grok et du bleu Antigravity — et JAMAIS l'ambre #f5a623, déjà porteur de sens (état waiting) */
+  --source-kimi-bg:        rgba(217, 70, 239, 0.12);
+
+  /* ── Ombres ── */
+  --shadow-overlay:    rgba(0,0,0,0.4);
+
+  /* ── Usage bar ── */
+  --usage-ok:       #4ade80;
+  --usage-warn:     #f5a623;
+  --usage-critical: #f87171;
+
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Base */
+body {
+  margin: 0;
+  background: var(--bg-overlay);
+  color: var(--text-primary);
+  font-family: system-ui, sans-serif;
+}

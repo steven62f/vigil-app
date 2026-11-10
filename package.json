@@ -1,0 +1,38 @@
+{
+  "name": "vigil",
+  "private": true,
+  "version": "1.7.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build:release": "cargo build --release -p vigil-claude -p vigil-codex -p vigil-grok -p vigil-antigravity -p vigil-kimi && npm run tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.7.0",
+    "@tauri-apps/plugin-store": "^2.4.2",
+    "clsx": "^2.1.1",
+    "motion": "^11.18.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^2.6.0",
+    "zustand": "5.0.12"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.4",
+    "@tauri-apps/cli": "^2",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "tailwindcss": "^4.1.4",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.2",
+    "vitest": "^4.1.4"
+  }
+}
