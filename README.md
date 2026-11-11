@@ -2,6 +2,8 @@
 
 [Français](README.fr.md)
 
+**[Website](https://vigil-site-ark.pages.dev/en/)** — see what Vigil looks like and how it is used.
+
 A Windows desktop companion for CLI coding agents.
 
 Vigil sits at the top of the screen as a small always-on-top notch, and opens into a panel when you need the detail. Each supported CLI runs a small Vigil hook on its own events. The hook reports over a local named pipe, and Vigil shows what the agent is doing: working, waiting for a decision, idle, ended, or in error.

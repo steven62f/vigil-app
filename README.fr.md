@@ -2,6 +2,8 @@
 
 [English](README.md)
 
+**[Site](https://vigil-site-ark.pages.dev/fr/)** — voir à quoi ressemble Vigil et comment on s’en sert.
+
 Un compagnon Windows pour les agents de code en ligne de commande.
 
 Vigil reste en haut de l’écran sous la forme d’un notch, toujours au premier plan, et s’ouvre en panneau quand le détail est utile. Chaque CLI pris en charge lance un petit hook Vigil sur ses propres événements. Le hook parle à Vigil par un tube nommé local, et Vigil affiche ce que fait l’agent : en cours, en attente d’une décision, inactif, terminé, ou en erreur.
